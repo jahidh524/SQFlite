@@ -1,7 +1,6 @@
 import 'package:database/required_components.dart';
 import 'package:database/sql_helper.dart';
 import 'package:flutter/material.dart';
-import 'package:database/required_components.dart';
 
 void main() {
   runApp(const MyApp());
@@ -40,6 +39,37 @@ class _HomePageState extends State<HomePage> {
   }
 
   @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text("SQL Test")),
+      body: ListView.builder(
+          itemCount: _privatelist.length,
+          itemBuilder: (BuildContext context, int index) => Card(
+                color: Colors.lightBlueAccent,
+                margin: const EdgeInsets.all(8),
+                child: ListTile(
+                  title: Text(_privatelist[index][title]),
+                  subtitle: Text(_privatelist[index][description]),
+                  trailing: SizedBox(
+                    width: MediaQuery.of(context).size.width / 4,
+                    child: Row(children: [
+                      IconButton(
+                        icon: const Icon(Icons.edit),
+                        onPressed: () => dataForm(_privatelist[index][id]),
+                      ),
+                      IconButton(
+                          onPressed: () => _deleteItem(_privatelist[index][id]),
+                          icon: const Icon(Icons.delete))
+                    ]),
+                  ),
+                ),
+              )),
+      floatingActionButton: FloatingActionButton(
+          child: const Icon(Icons.add), onPressed: () => dataForm(null)),
+    );
+  }
+
+  @override
   void initState() {
     super.initState();
     _refreshList();
@@ -66,10 +96,10 @@ class _HomePageState extends State<HomePage> {
     _refreshList();
   }
 
-  SizedBox sizedBoxWidget(double width, double height) {
-    return SizedBox(
-      width: width,
-      height: height,
+  SizedBox sizedBoxWidget() {
+    return const SizedBox(
+      width: 0,
+      height: 10,
     );
   }
 
@@ -103,16 +133,12 @@ class _HomePageState extends State<HomePage> {
                     controller: _titleController,
                     decoration: const InputDecoration(hintText: 'Title'),
                   ),
-                  const SizedBox(
-                    height: 10,
-                  ),
+                  sizedBoxWidget(),
                   TextField(
                     controller: _descriptionController,
                     decoration: const InputDecoration(hintText: 'Description'),
                   ),
-                  const SizedBox(
-                    height: 20,
-                  ),
+                  sizedBoxWidget(),
                   ElevatedButton(
                     onPressed: () async {
                       if (id == null) {
@@ -130,37 +156,5 @@ class _HomePageState extends State<HomePage> {
                 ],
               ),
             ));
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text("SQL Test")),
-      body: ListView.builder(
-          itemCount: _privatelist.length,
-          itemBuilder: (BuildContext context, int index) => Card(
-                color: Colors.lightBlueAccent,
-                margin: const EdgeInsets.all(8),
-                child: ListTile(
-                  title: Text(_privatelist[index][title]),
-                  subtitle: Text(_privatelist[index][description]),
-                  trailing: SizedBox(
-                    width: 100,
-                    child: Row(children: [
-                      IconButton(
-                        icon: const Icon(Icons.edit),
-                        onPressed: () => dataForm(_privatelist[index][id]),
-                      ),
-                      IconButton(
-                          onPressed: () =>
-                              _deleteItem(_privatelist[index][id]),
-                          icon: const Icon(Icons.delete))
-                    ]),
-                  ),
-                ),
-              )),
-      floatingActionButton: FloatingActionButton(
-          child: const Icon(Icons.add), onPressed: () => dataForm(null)),
-    );
   }
 }
